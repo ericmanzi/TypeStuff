@@ -1,0 +1,184 @@
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,sub,sup,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td {  background: transparent;  border: 0; font-size: 100%; margin: 0; outline: 0; padding: 0; vertical-align: baseline; }
+:focus { outline: 0; }
+
+body {
+    padding: 0;
+    margin: 0;
+}
+
+body, html {
+    height: 100%;
+    width: 100%;
+    overflow: hidden;
+}
+
+.textarea-label {
+    display: block;
+    padding-left: 40px;
+    margin-top: 30px;
+    height: 99%;
+    overflow-y: scroll;
+    cursor: text;
+}
+
+.noteContent {
+    font-size: 1em;
+    float: left;
+    resize: none;
+    line-height: 1.3em;
+    font-weight: 300;
+    border: 0 none;
+    margin: 0;
+    outline: 0 none;
+    height: 95%;
+    width: 100%;
+    padding-right: 10px;
+    box-sizing: border-box;
+}
+
+
+
+.terminal, body.terminal label textarea {
+    font-family: menlo, Courier, serif;
+    /*color: #53a350;*/
+    color: #7cbb7a;
+    background-color: #232321;
+}
+
+.terminal2, body.terminal2 label textarea {
+    font-family: Courier, serif;
+    color: #A9A9A9;
+    background-color: #232321;
+}
+
+.nuclide, body.nuclide label textarea {
+    font-family: "Segoe UI",Helvetica,sans-serif;
+    color: rgb(118, 122, 128);
+    background-color: #191C21;
+}
+
+.nuclide2, body.nuclide2 label textarea {
+    font-family: "Segoe UI",Helvetica,sans-serif;
+    color: #A6A6A7;
+    background-color: #191C21;
+}
+
+.paper, body.paper label textarea {
+    font-family: "Adobe Garamond",serif;
+    color: black;
+    background-color: #E7E6E2;
+}
+
+#controls {
+    position: fixed;
+    top: 5px;
+    right: -1000px;
+    opacity: 0;
+    -webkit-transition-property: opacity right top;
+    -webkit-transition-duration: 1s;
+    -webkit-transition-timing-function: ease;
+    transition-property: opacity right top;
+    transition-duration: 1s;
+    transition-timing-function: ease;
+}
+
+#controls.show {
+    position: fixed;
+    top: 5px;
+    right: 60px;
+    opacity: 1;
+    -webkit-transition-property: opacity right top;
+    -webkit-transition-duration: 1s;
+    -webkit-transition-timing-function: ease;
+    transition-property: opacity right top;
+    transition-duration: 1s;
+    transition-timing-function: ease;
+}
+
+button, .zoom {
+    float: left;
+    height: 20px;
+    border: 1px solid #979797;
+    border-radius: 5px;
+    margin-left: 10px;
+    width: 25px;
+    text-align: center;
+    padding: 1px 0 1px 0;
+    font-size: 13px;
+    box-sizing: border-box;
+}
+.note {
+    float: left;
+    height: 20px;
+    border: 1px solid #979797;
+    /*border-radius: 5px;*/
+    margin-left: 2px;
+    /*width: 25px;*/
+    text-align: center;
+    padding: 1px 3px 1px 3px;
+    font-size: 13px;
+    box-sizing: border-box;
+}
+.notes {
+    display: inline;
+}
+button:hover, .zoom:hover, .note:hover {
+    cursor: pointer;
+    box-shadow: 0 0 5px #609aed;
+}
+#bigger {
+    margin-right: 50px;
+    font-size: 16px;
+}
+#smaller {
+    margin-left: 50px;
+}
+button.selected, .note.selected {
+    box-shadow: 0 0 1px 2px #3985F1;
+}
+
+#settings {
+    position: fixed;
+    right: 5px;
+    top: 5px;
+    -webkit-transition-property: transform;
+    -webkit-transition-duration: 1s;
+    transition-property: transform;
+    transition-duration: 1s;
+}
+#delete {
+    position: fixed;
+    right: 10px;
+    top: 80px;
+}
+#delete:hover {
+    cursor: pointer;
+}
+#settings:hover{
+    cursor: pointer;
+    transform: rotate(270deg) scale(1.2);
+    -webkit-transform: rotate(270deg) scale(1.2);
+}
+
+::selection {
+  background: cadetblue;
+}
+
+[contentEditable=true]:empty:not(:focus):before{
+    content:attr(data-placeholder);
+    color:grey;
+    font-style:italic;
+}
+
+[contentEditable=false] {
+    display: inline;
+}
+
+a {
+    color: #609aed;
+    text-decoration: none;
+}
+a:hover {
+    cursor: pointer;
+    text-decoration: underline;
+}

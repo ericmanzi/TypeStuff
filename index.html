@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <link rel="stylesheet" href="style.css">
+    <title>Type Stuff</title>
+</head>
+
+<body class="nuclide">
+<label class="textarea-label" id="textarea-label">
+    <div id="content" class="noteContent" contenteditable="true" spellcheck="false"
+         data-placeholder="type stuff... and add inline links as in markdown: [an example]{https://example.com}">
+    </div>
+
+</label>
+<div id="controls">
+    <div class="notes" id="notesNavigator">
+        <span class="note" id="new">+</span>
+        <span class="note" id="stuff" noteName="stuff" refNoteId="content">stuff</span>
+    </div>
+    <span class="" id="delete"><img src="delete.png" width="20px"/></span>
+    <span class="zoom" id="smaller">&ndash;</span>
+    <span class="zoom" id="bigger">+</span>
+    <button class="terminal">A</button>
+    <button class="terminal2">A</button>
+    <button class="nuclide">A</button>
+    <button class="nuclide2">A</button>
+    <button class="paper">A</button>
+</div>
+<div id="settings">
+    <img src="settings.png" width="30px"/>
+</div>
+</body>
+
+<script src="index.js"></script>
+</html>
