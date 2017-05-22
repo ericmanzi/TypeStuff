@@ -10,4 +10,6 @@ New:
 Todo:
 - op transforms for consistency across multiple tabs
 
+Try it out [on the Chrome webstore](https://chrome.google.com/webstore/detail/typestuff/hhokofhceacagcdmnhmjlencjcgpcjpl)
+
 ![Demo](http://i.imgur.com/UuhtCfu.png)
