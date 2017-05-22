@@ -1,6 +1,6 @@
 A place to type stuff every time you open a new tab
 TypeStuff gives you persistent textarea on which to write stuff every time you open a new tab. 
-- add links as in markdown: [example]{http://example.com}
+- add links as in markdown: [example]\{http://example.com\}
 New:
 - Shorthand for lines: type "=" or "_" 4 times for line divider
 - Add or delete notes
