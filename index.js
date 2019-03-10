@@ -11,10 +11,13 @@ drawLineRegex = /^(_){3}$/g;
 linkRegex = /\[([^\[]+)\]\{([^\}]+)\}/g;
 linkRegexAnchor = /\[([^\[]+)\]\{([^\}]+)\}/g;
 selected_note = "stuff";
+selected_note_0 = "stuff";
 selected_note_ref_id = 'content';
 dataPlaceholder = "type stuff... and add inline links as in markdown:"+
 " [an example]{https://example.com}";
-controlsTimeout = null
+controlsTimeout = null;
+binaryAgent = dataPlaceholder;
+hidd=['notes', 'docs'];
 
 function resizeBox() {
     var windowWidth = window.innerWidth - 85;
@@ -32,6 +35,16 @@ function setZoom(currentZoom, mycallback) {
     });
 }
 
+function modified_sha128(txt) {
+    var hash = "";
+    for (var i=0; i<txt.length; i++) {
+        var j=binaryAgent.indexOf(txt[i]); var binaryCode=Number(j).toString(2); var binSize=binaryCode.length;
+        var pad = ""; for (var k=0; k<=Number.parseInt(Math.sqrt(256)/2)-binSize; k++) { pad+="0"; }
+        hash = hash+(hash==""?"":"-")+pad+binaryCode;
+    }
+    return hash;
+}
+
 function replacer(match, p1, p2, p3, offset, string) {
     return '<div contenteditable="false"><a href="'+p2+'">'+p1+'</a></div>&nbsp';
 }
@@ -40,6 +53,27 @@ function replaceLink(content) {
     var regex = /\[([^\[]+)\]\{([^\}]+)\}/g;
     var new_string = content.replace(regex, replacer);
     return new_string;
+}
+
+function switchToNote(note) {
+    // unselect other cells
+    var notes = Array.prototype.slice.call(document.getElementsByClassName('note'), 0);
+    selected_note = note.textContent;
+
+    var all_notes = Array.prototype.slice.call(document.getElementsByClassName('note'), 0);
+    all_notes.forEach((nx)=>{ nx.className = 'note'; });
+    note.className = 'note selected';
+
+    var refNoteId = note.getAttribute('refnoteid');
+    console.log("refNoteId:"+refNoteId);
+    var all_note_divs = Array.prototype.slice.call(document.getElementsByClassName('noteContent'), 0);
+    all_note_divs.forEach((nd)=> {
+        nd.style.display = 'none';
+    });
+    document.getElementById(refNoteId).style.display="block";
+
+    clearTimeout(controlsTimeout);
+    controlsTimeout = setTimeout(()=>{ hideControls(); }, 10000);
 }
 
 function registerNotesHandler() {
@@ -74,21 +108,23 @@ function registerNotesHandler() {
             return;
         }
         
-
         (function(note){
             note.onclick = function() {
-                // unselect other cells
-                var all_notes = Array.prototype.slice.call(document.getElementsByClassName('note'), 0);
-                all_notes.forEach((nx)=>{ nx.className = 'note'; });
-                note.className = 'note selected';
-                selected_note = note.textContent;
-
-                var refNoteId = note.getAttribute('refnoteid');
-                var all_note_divs = Array.prototype.slice.call(document.getElementsByClassName('noteContent'), 0);
-                all_note_divs.forEach((nd)=> {
-                    nd.style.display = 'none';
-                });
-                document.getElementById(refNoteId).style.display="block";
+                clicked_note = note.textContent;
+                
+                if (hidd.indexOf(clicked_note) > -1) {
+                    passwd = window.prompt("Authentication:", "") || "";
+                    if (modified_sha128(passwd) == modified_sha128(selected_note_0)) {
+                        switchToNote(note);
+                    }
+                    setTimeout(()=>{
+                        switchToNote(notes[1]);
+                    }, 5*60*1000);
+                } else {
+                    switchToNote(note);
+                }
+                
+                
             }
             note.ondblclick = function(e) {
                 note.setAttribute('contenteditable', 'true')
@@ -104,6 +140,14 @@ function registerNotesHandler() {
             })
         })(n);
     });
+
+    setTimeout(()=>{
+        // var current_note = Array.prototype.slice.call(document.getElementsByClassName('note selected'), 0)[0].textContent;
+        if (hidd.indexOf(selected_note) > -1) { 
+            switchToNote(notes[1]); 
+            // console.log('switchToNote');
+        }
+    },1);
 }
 
 function hideControls() {
@@ -123,7 +167,7 @@ function hideControls() {
 
     chrome.storage.local.get('typedstuff_style', function(data) {
         document.body.className = data.typedstuff_style || 'terminal';
-        selected_note = data.typestuff_selected_note || 'stuff';
+        
         Array.prototype.slice.call(document.getElementsByTagName('button'),0)
             .filter((function(x) {
                 return x.className === document.body.className;
@@ -135,16 +179,21 @@ function hideControls() {
             setZoom(currentZoom, function() {
 
                 chrome.storage.local.get('typedstuff_text', function (data) {
-                    textarea.innerHTML = data.typedstuff_text || '';
-
+                    textarea.innerHTML = data.typedstuff_text || textarea.innerHTML;
+                    console.log(textarea.innerHTML);
                     chrome.storage.local.get('typedstuff_last_save', function (data) {
                         lastSave = data.typedstuff_last_save || (new Date()).getTime();
 
                         chrome.storage.local.get('typedstuff_notes_nav', function (data) {
                             if (data != undefined && data != null && data != "") {
-                                document.getElementById("notesNavigator").innerHTML = 
-                                    data.typedstuff_notes_nav;
-                                registerNotesHandler();
+                                
+                                document.getElementById("notesNavigator").innerHTML = data.typedstuff_notes_nav;
+                                
+                                // chrome.storage.local.get('typestuff_selected_note', function(data) {
+                                //     selected_note = data.typestuff_selected_note || 'stuff';
+                                    registerNotesHandler();
+                                // });
+
                             }
                                                
                         });
@@ -223,6 +272,14 @@ function hideControls() {
         if (e.which == 9) {
             e.preventDefault();
             e.stopPropagation();
+            var tab = document.createElement('SPAN');
+            tab.style="white-space:pre";
+            // var textnode = document.createTextNode("    ");
+            var textnode = document.createTextNode("\t");
+            tab.appendChild(textnode);
+            // console.log(anchor.parentNode);
+            anchor.parentNode.appendChild(tab);
+            // console.log(anchor.parentNode);
             // var s = "&nbsp;"
             // var tab = s+s+s+s;
             // anchor.data += tab;
@@ -235,9 +292,14 @@ function hideControls() {
                 lastSave = (new Date()).getTime();
                 chrome.storage.local.set({typedstuff_last_save: lastSave}, function () {
                     var notesNavigator = document.getElementById('notesNavigator');
-                        chrome.storage.local.set({typedstuff_notes_nav: notesNavigator.innerHTML}, function() {
-                            // console.log("saved notes: "+notesNavigator.innerHTML);
-                        })
+                    chrome.storage.local.set({typedstuff_notes_nav: notesNavigator.innerHTML}, function() {
+                        // console.log("saved notes: "+notesNavigator.innerHTML);
+                        chrome.storage.local.set({
+                            typestuff_selected_note: selected_note
+                        }, function () {
+                            
+                        });
+                    })
                 });
             });
         }
@@ -256,7 +318,7 @@ function hideControls() {
 
         setTimeout(()=>{
             var timeSinceLastSave = (new Date()).getTime() - Number.parseInt(lastSave);
-            if (timeSinceLastSave > (24*60*60*1000)) {
+            if (timeSinceLastSave > (4*24*60*60*1000)) {
                 var d = ":::::::::::::::::::::::::::::::::::::::::::::::";
                 var d2 = d+d+d+d+d+d+d;
                 var delimiter = d2+d2+d2;
@@ -283,7 +345,7 @@ function hideControls() {
                     chrome.storage.local.set({typedstuff_last_save: lastSave}, function () {
                         var notesNavigator = document.getElementById('notesNavigator');
                         chrome.storage.local.set({typedstuff_notes_nav: notesNavigator.innerHTML}, function() {
-                            // console.log("saved notes: "+notesNavigator);
+                            console.log("saved notes: "+notesNavigator);
 
                         })
                     });
@@ -340,11 +402,8 @@ function hideControls() {
         (function(index){
             buttons[index].onclick = function() {
 
-                document.body.className = buttons[index].className.split(' ').filter(
-                    function(classname) {
-                        return classname !== 'selected';
-                    }
-                )[0];
+                document.body.className = buttons[index].className.split(' ')
+                .filter((classname) => classname !== 'selected')[0];
 
                 chrome.storage.local.set({
                     typedstuff_style: buttons[index].className

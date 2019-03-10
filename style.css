@@ -69,6 +69,25 @@ body, html {
     background-color: #E7E6E2;
 }
 
+@font-face {
+    font-family: Heirophant;
+    src: url("Heirophant-Regular.otf") format("opentype");
+}
+
+.heirophant, body.heirophant label textarea {
+    font-family: Heirophant;
+    color: #7cbb7a;
+    background-color: #232321;
+    text-transform: uppercase;
+}
+
+body.heirophant label .noteContent {
+    line-height: 1.2em;
+    word-spacing: 0.9em;
+    letter-spacing: 0.9px;
+    font-size: 120%;
+}
+
 #controls {
     position: fixed;
     top: 5px;
@@ -85,7 +104,7 @@ body, html {
 #controls.show {
     position: fixed;
     top: 5px;
-    right: 60px;
+    right: 70px;
     opacity: 1;
     -webkit-transition-property: opacity right top;
     -webkit-transition-duration: 1s;
@@ -141,9 +160,9 @@ button.selected, .note.selected {
     position: fixed;
     right: 5px;
     top: 5px;
-    -webkit-transition-property: transform;
+    -webkit-transition-property: transform right top;
+    transition-property: transform right top;
     -webkit-transition-duration: 1s;
-    transition-property: transform;
     transition-duration: 1s;
 }
 #delete {
@@ -156,8 +175,14 @@ button.selected, .note.selected {
 }
 #settings:hover{
     cursor: pointer;
-    transform: rotate(270deg) scale(1.2);
-    -webkit-transform: rotate(270deg) scale(1.2);
+    right: 15px;
+    top: 15px;
+    transform: rotate(270deg) scale(2);
+    -webkit-transform: rotate(270deg) scale(2);
+    transition-property: transform right top;
+    -webkit-transition-property: transform right top;
+    transition-duration: 1s;
+    -webkit-transition-duration: 1s;
 }
 
 ::selection {
